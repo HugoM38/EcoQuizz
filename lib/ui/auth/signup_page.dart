@@ -12,129 +12,70 @@ class SignupPage extends StatelessWidget {
     final viewModel = Provider.of<SignupViewModel>(context);
 
     return Scaffold(
-      appBar: const EcoQuizzAppBar(title: "Inscription"),
-      body: Center(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.2,
-                    vertical: 20),
-                child: Text(
-                  'Créer un compte',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+      appBar: const EcoQuizzAppBar(title: "EcoQuizz"),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          double horizontalPadding =
+              constraints.maxWidth > 600 ? constraints.maxWidth * 0.2 : 20;
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Créer un compte',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: viewModel.emailController,
+                      decoration: InputDecoration(
+                          labelText: "Adresse email",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: viewModel.passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          labelText: "Mot de passe",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: viewModel.confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          labelText: "Confirmer le mot de passe",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(height: 20),
+                    EcoQuizzButton(
+                      title: "S'inscrire",
+                      isLoading: viewModel.isLoading,
+                      isEnable: viewModel.isEnableSignupButton(),
+                      onPressed: () async {
+                        await viewModel.signup(context);
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () =>
+                          Navigator.pushReplacementNamed(context, '/login'),
+                      child: const Text(
+                          "Vous avez déjà un compte ? Connectez-vous"),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.2,
-                    vertical: 10),
-                child: TextFormField(
-                  controller: viewModel.emailController,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: "Addresse email",
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.2,
-                    vertical: 10),
-                child: TextFormField(
-                  controller: viewModel.passwordController,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Mot de passe',
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.2,
-                    vertical: 10),
-                child: TextFormField(
-                  controller: viewModel.confirmPasswordController,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Confirmer le mot de passe',
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: EcoQuizzButton(
-                  title: "S'inscrire",
-                  isLoading: viewModel.isLoading,
-                  isEnable: viewModel.isEnableSignupButton(),
-                  onPressed: () async {
-                    await viewModel.signup(context);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

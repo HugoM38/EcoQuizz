@@ -2,33 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_appbar.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_button.dart';
-import 'login_viewmodel.dart';
+import 'signup_viewmodel.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LoginViewModel>(context);
+    final viewModel = Provider.of<SignupViewModel>(context);
 
     return Scaffold(
-      appBar: const EcoQuizzAppBar(title: "EcoQuizz"),
+      appBar: const EcoQuizzAppBar(title: "Inscription"),
       body: Center(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.8,
           child: Column(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.35,
-                    vertical: MediaQuery.of(context).size.height * 0.1),
+                    horizontal: MediaQuery.of(context).size.width * 0.2,
+                    vertical: 20),
                 child: Text(
-                  'Connexion à EcoQuizz',
+                  'Créer un compte',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
@@ -39,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.35,
+                    horizontal: MediaQuery.of(context).size.width * 0.2,
                     vertical: 10),
                 child: TextFormField(
                   controller: viewModel.emailController,
@@ -68,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.35,
+                    horizontal: MediaQuery.of(context).size.width * 0.2,
                     vertical: 10),
                 child: TextFormField(
                   controller: viewModel.passwordController,
@@ -97,26 +92,44 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: EcoQuizzButton(
-                  title: "Se connecter",
-                  isLoading: viewModel.isLoading,
-                  isEnable: viewModel.isEnableLoginButton(),
-                  onPressed: () async {
-                    await viewModel.login(context);
-                  },
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.2,
+                    vertical: 10),
+                child: TextFormField(
+                  controller: viewModel.confirmPasswordController,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Confirmer le mot de passe',
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  obscureText: true,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
-                child: Text(
-                  "Vous n'avez pas de compte ? Inscrivez-vous",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    decoration: TextDecoration.underline,
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: EcoQuizzButton(
+                  title: "S'inscrire",
+                  isLoading: viewModel.isLoading,
+                  isEnable: viewModel.isEnableSignupButton(),
+                  onPressed: () async {
+                    await viewModel.signup(context);
+                  },
                 ),
               ),
             ],

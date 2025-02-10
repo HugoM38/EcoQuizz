@@ -1,3 +1,5 @@
+import 'package:ecoquizz/ui/auth/signup_page.dart';
+import 'package:ecoquizz/ui/auth/signup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:ecoquizz/models/auth_model.dart';
 import 'package:ecoquizz/ui/auth/login_page.dart';
@@ -11,6 +13,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => LoginViewModel()),
       ChangeNotifierProvider(create: (context) => AuthModel()),
+      ChangeNotifierProvider(create: (context) => SignupViewModel()),
     ],
     child: const EcoQuizz(),
   ));
@@ -25,6 +28,7 @@ class EcoQuizz extends StatelessWidget {
       title: 'EcoQuizz',
       routes: {
         '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignupPage(),
         '/home': (context) => const HomePage(),
       },
       navigatorObservers: [AuthObserver()],

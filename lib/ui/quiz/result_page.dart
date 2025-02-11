@@ -1,5 +1,7 @@
+import 'package:ecoquizz/services/quiz_service.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_appbar.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_button.dart';
+import 'package:ecoquizz/utils/show_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class ResultPage extends StatelessWidget {
@@ -69,7 +71,15 @@ class ResultPage extends StatelessWidget {
                     SizedBox(height: 30),
                     EcoQuizzButton(
                       title: "Terminer",
-                      onPressed: () {
+                      onPressed: () async {
+                        try {
+                          String result =
+                              await QuizService().saveQuizResult(totalImpact);
+                          showSnackbar(context, result, isError: false);
+                        } catch (e) {
+                          showSnackbar(context, e.toString());
+                        }
+
                         Navigator.pop(context);
                       },
                     )

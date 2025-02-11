@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ecoquizz/services/auth_service.dart';
-import 'package:ecoquizz/utils/show_error_snackbar.dart';
+import 'package:ecoquizz/utils/show_snackbar.dart';
 
 class SignupViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -41,18 +41,18 @@ class SignupViewModel extends ChangeNotifier {
 
   Future signup(BuildContext context) async {
     if (!emailRegex.hasMatch(emailController.text)) {
-      showErrorSnackbar(context, "Adresse email invalide");
+      showSnackbar(context, "Adresse email invalide");
       return;
     }
 
     if (!passwordRegex.hasMatch(passwordController.text)) {
-      showErrorSnackbar(context,
+      showSnackbar(context,
           "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre");
       return;
     }
 
     if (passwordController.text != confirmPasswordController.text) {
-      showErrorSnackbar(context, "Les mots de passe ne correspondent pas");
+      showSnackbar(context, "Les mots de passe ne correspondent pas");
       return;
     }
 
@@ -69,7 +69,7 @@ class SignupViewModel extends ChangeNotifier {
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
-      showErrorSnackbar(context, e.toString());
+      showSnackbar(context, e.toString());
     }
 
     isLoading = false;

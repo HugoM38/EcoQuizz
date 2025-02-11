@@ -34,7 +34,6 @@ class EcoQuizz extends StatelessWidget {
       navigatorObservers: [AuthObserver()],
       theme: ThemeData(
         colorScheme: const ColorScheme(
-          //TODO: Improve the color scheme
           brightness: Brightness.light,
           primary: Color(0xFFA5B452),
           onPrimary: Color(0xFFFFFFFF),

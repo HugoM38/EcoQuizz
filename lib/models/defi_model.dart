@@ -4,7 +4,7 @@ class Defi {
   final String description;
   final int impact;
   final bool unlimited;
-  final DateTime? lastDate; // null si aucun timestamp ou si jamais validé
+  final DateTime? lastDate;
 
   Defi({
     required this.id,
@@ -14,9 +14,7 @@ class Defi {
     required this.unlimited,
     this.lastDate,
   });
-
-  /// Convertit un objet JSON en Defi
-  /// - lastDate sera null si le JSON n'en fournit pas
+  
   factory Defi.fromJson(Map<String, dynamic> json) {
     return Defi(
       id: json["_id"]?.toString()

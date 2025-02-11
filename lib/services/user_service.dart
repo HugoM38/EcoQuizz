@@ -20,7 +20,6 @@ class UserService {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      // On attend { "quiz_history": [...] }
       return data["quiz_history"];
     } else {
       throw Exception("Erreur lors de la récupération de l'historique des quiz");
@@ -42,7 +41,6 @@ class UserService {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      // On attend { "defi_history": [...] }
       return data["defi_history"];
     } else {
       throw Exception("Erreur lors de la récupération de l'historique des défis");

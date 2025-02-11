@@ -15,7 +15,6 @@ class _HistoryTabState extends State<HistoryTab> {
   @override
   void initState() {
     super.initState();
-    // On utilise l'historique des défis pour cet onglet
     _historyFuture = _userService.fetchUserDefiHistory();
   }
 
@@ -37,12 +36,12 @@ class _HistoryTabState extends State<HistoryTab> {
             itemCount: history.length,
             itemBuilder: (context, index) {
               final item = history[index];
-              // Conversion de la date (en supposant qu'elle est renvoyée en ISO String)
               DateTime date = DateTime.parse(item["date"]);
               String formattedDate = "${date.day}/${date.month}/${date.year}";
               final defi = item["defi"];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
+                color: Colors.white,
                 child: ListTile(
                   leading: const Icon(
                     Icons.check_circle,

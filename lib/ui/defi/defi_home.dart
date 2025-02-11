@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:ecoquizz/models/question.dart';
+import 'package:ecoquizz/services/quiz_service.dart';
+import 'package:ecoquizz/ui/quiz/quiz_page.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_appbar.dart';
+import 'package:flutter/material.dart';
 import 'package:ecoquizz/services/defi_service.dart';
 import 'package:ecoquizz/models/defi_model.dart';
 import 'package:ecoquizz/utils/shared_prefs_manager.dart';
@@ -24,12 +27,10 @@ class _DefiPageState extends State<DefiPage> {
     _loadData();
   }
 
-  /// Compare deux dates sur la base de l'année, du mois et du jour
   bool isSameDay(DateTime d1, DateTime d2) {
     return d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
   }
 
-  /// Charge les données depuis deux endpoints et fusionne
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -40,13 +41,10 @@ class _DefiPageState extends State<DefiPage> {
       final userId = await SharedPreferencesManager.getUser();
       if (userId == null) throw "Aucun utilisateur connecté.";
 
-      // Récupérer tous les défis (sans lastDate ou lastDate == null)
       final allDefis = await _defiService.fetchAllDefis();
 
-      // Récupérer les défis validés par l'utilisateur (avec lastDate renseigné)
       final userDefis = await _defiService.fetchLastTimeDone(userId);
 
-      // Créer une map pour un accès rapide par id
       final userMap = {for (final d in userDefis) d.id: d};
       final merged = <Defi>[];
 
@@ -71,7 +69,6 @@ class _DefiPageState extends State<DefiPage> {
     }
   }
 
-  /// Appelle l'endpoint updateHistory et recharge les données
   Future<void> _validerDefi(Defi defi) async {
     try {
       final userId = await SharedPreferencesManager.getUser();
@@ -88,24 +85,12 @@ class _DefiPageState extends State<DefiPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const EcoQuizzAppBar(title: "EcoQuizz"),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _errorMsg != null
-          ? Center(
-        child: Text(
-          "Erreur : $_errorMsg",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.error,
-          ),
-        ),
-      )
-          : _buildContent(),
-    );
+  void startQuiz() async {
+    List<Question> questions = await QuizService().fetchQuestions();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => QuizPage(questions: questions)));
   }
 
   Widget _buildContent() {
@@ -143,16 +128,9 @@ class _DefiPageState extends State<DefiPage> {
               bool isBlocked = false;
 
               if (!defi.unlimited && defi.lastDate != null) {
-                // Convertir la date récupérée en local pour comparaison
                 final localLastDate = defi.lastDate!.toLocal();
-                debugPrint("[DEBUG] Défi: ${defi.titre}, unlimited: ${defi.unlimited}");
-                debugPrint("lastDate (local): $localLastDate");
-                debugPrint("now (local): $nowLocal");
                 if (isSameDay(localLastDate, nowLocal)) {
                   isBlocked = true;
-                  debugPrint("-> Même jour, le bouton doit être bloqué.");
-                } else {
-                  debugPrint("-> Pas le même jour, le bouton reste actif.");
                 }
               }
 
@@ -169,24 +147,23 @@ class _DefiPageState extends State<DefiPage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Affichage de l'icône ou du tag "1x"
                         Container(
                           margin: const EdgeInsets.only(right: 12),
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             child: defi.unlimited
                                 ? const Icon(
-                              Icons.all_inclusive,
-                              color: Colors.white,
-                            )
+                                    Icons.all_inclusive,
+                                    color: Colors.white,
+                                  )
                                 : const Text(
-                              "1x",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                                    "1x",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
                         ),
-                        // Informations principales du défi
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +173,8 @@ class _DefiPageState extends State<DefiPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -204,22 +182,29 @@ class _DefiPageState extends State<DefiPage> {
                                 defi.description,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary
+                                          .withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       "Impact : ${defi.impact}",
                                       style: TextStyle(
-                                        color: Theme.of(context).colorScheme.secondary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -237,18 +222,21 @@ class _DefiPageState extends State<DefiPage> {
                             ],
                           ),
                         ),
-                        // Bouton de validation
                         const SizedBox(width: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                           ),
-                          onPressed: isBlocked ? null : () => _validerDefi(defi),
+                          onPressed:
+                              isBlocked ? null : () => _validerDefi(defi),
                           child: Text(
                             isBlocked ? "Bloqué (aujourd'hui)" : "Valider",
                             style: const TextStyle(fontSize: 14),
@@ -263,6 +251,32 @@ class _DefiPageState extends State<DefiPage> {
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const EcoQuizzAppBar(title: "EcoQuizz"),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMsg != null
+              ? Center(
+                  child: Text(
+                    "Erreur : $_errorMsg",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                )
+              : _buildContent(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        onPressed: startQuiz,
+        child: const Icon(Icons.quiz),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -19,12 +19,9 @@ class QuizHistoryChart extends StatelessWidget {
           return const Center(child: Text("Aucune donnée de quiz disponible"));
         } else {
           List<dynamic> history = snapshot.data!;
-          // Trier par date (on suppose que "date" est en millisecondes)
           history.sort((a, b) => a["date"].compareTo(b["date"]));
-          // Garder les 10 derniers éléments
           final last10 = history.length > 10 ? history.sublist(history.length - 10) : history;
           
-          // Construire les points du graphique
           List<FlSpot> spots = [];
           for (int i = 0; i < last10.length; i++) {
             double x = i.toDouble();

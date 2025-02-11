@@ -29,7 +29,6 @@ class DefiHistoryChart extends StatelessWidget {
           return const Center(child: Text("Aucun défi disponible"));
         } else {
           List<dynamic> defiHistory = snapshot.data!;
-          // Filtrer les défis des 10 derniers jours
           DateTime now = DateTime.now();
           DateTime tenDaysAgo = now.subtract(const Duration(days: 10));
           List<dynamic> filtered = defiHistory.where((item) {
@@ -37,23 +36,19 @@ class DefiHistoryChart extends StatelessWidget {
             return date.isAfter(tenDaysAgo);
           }).toList();
 
-          // Grouper par jour et sommer l'impact issu du défi (champ "impact" dans item["defi"])
           Map<String, double> dailyImpact = {};
           for (var item in filtered) {
             DateTime date = parseDate(item["date"]);
-            // Générer une clé au format ISO standard avec zéro-padding pour le mois et le jour
             String key = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
             double impact = (item["defi"]["impact"] as num).toDouble();
             dailyImpact.update(key, (value) => value + impact, ifAbsent: () => impact);
           }
-          // Trier par date
           List<String> sortedKeys = dailyImpact.keys.toList()
             ..sort((a, b) {
               DateTime da = DateTime.parse(a);
               DateTime db = DateTime.parse(b);
               return da.compareTo(db);
             });
-          // Créer les groupes pour le graphique en barres
           List<BarChartGroupData> barGroups = [];
           for (int i = 0; i < sortedKeys.length; i++) {
             double y = dailyImpact[sortedKeys[i]]!;

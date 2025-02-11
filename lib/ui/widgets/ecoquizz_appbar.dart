@@ -12,7 +12,6 @@ class EcoQuizzAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    // Si un tabBar est fourni, on ajoute sa hauteur à celle de la barre d'outils
     if (tabBar != null) {
       return Size.fromHeight(kToolbarHeight + tabBar!.preferredSize.height);
     }

@@ -22,7 +22,7 @@ class AuthObserver extends NavigatorObserver {
     if (isUserLogged && routeName == '/login') {
       navigator!
           .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    } else if (!isUserLogged && routeName != '/login') {
+    } else if (!isUserLogged && (routeName != '/login' && routeName != '/signup')) {
       navigator!
           .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     }

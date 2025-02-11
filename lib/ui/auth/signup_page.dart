@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_appbar.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_button.dart';
-import 'login_viewmodel.dart';
+import 'signup_viewmodel.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LoginViewModel>(context);
+    final viewModel = Provider.of<SignupViewModel>(context);
 
     return Scaffold(
       appBar: const EcoQuizzAppBar(title: "EcoQuizz"),
@@ -30,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Connexion à EcoQuizz',
+                      'Créer un compte',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
@@ -38,35 +33,42 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: viewModel.emailController,
                       decoration: InputDecoration(
-                        labelText: "Adresse email",
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.secondary,
-                      ),
+                          labelText: "Adresse email",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: viewModel.passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Mot de passe",
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.secondary,
-                      ),
+                          labelText: "Mot de passe",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: viewModel.confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          labelText: "Confirmer le mot de passe",
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.secondary),
                     ),
                     const SizedBox(height: 20),
                     EcoQuizzButton(
-                      title: "Se connecter",
+                      title: "S'inscrire",
                       isLoading: viewModel.isLoading,
-                      isEnable: viewModel.isEnableLoginButton(),
+                      isEnable: viewModel.isEnableSignupButton(),
                       onPressed: () async {
-                        await viewModel.login(context);
+                        await viewModel.signup(context);
                       },
                     ),
                     TextButton(
                       onPressed: () =>
-                          Navigator.pushReplacementNamed(context, '/signup'),
+                          Navigator.pushReplacementNamed(context, '/login'),
                       child: const Text(
-                          "Vous n'avez pas de compte ? Inscrivez-vous"),
+                          "Vous avez déjà un compte ? Connectez-vous"),
                     ),
                   ],
                 ),

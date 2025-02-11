@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ecoquizz/services/auth_service.dart';
-import 'package:ecoquizz/utils/show_error_snackbar.dart';
+import 'package:ecoquizz/utils/show_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/auth_model.dart';
@@ -49,7 +49,7 @@ class LoginViewModel extends ChangeNotifier {
       }
     } catch (e) {
       if (context.mounted) {
-        showErrorSnackbar(context, e.toString());
+        showSnackbar(context, e.toString());
       }
     }
 

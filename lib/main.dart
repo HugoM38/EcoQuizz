@@ -30,8 +30,7 @@ class EcoQuizz extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
-        '/home': (context) => const HomePage(),
-        '/defi': (context) => const DefiPage()
+        '/home': (context) => const DefiPage()
       },
       navigatorObservers: [AuthObserver()],
       theme: ThemeData(

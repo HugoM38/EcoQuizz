@@ -7,7 +7,7 @@ class Answer {
   factory Answer.fromJson(Map<String, dynamic> json) {
     return Answer(
       answer: json['answer'],
-      impact: int.parse(json['impact']),
+      impact: json['impact'],
     );
   }
 }

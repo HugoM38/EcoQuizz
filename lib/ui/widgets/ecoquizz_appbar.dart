@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:ecoquizz/utils/shared_prefs_manager.dart';
 
 class EcoQuizzAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const EcoQuizzAppBar({super.key, required this.title});
+  const EcoQuizzAppBar({super.key, required this.title, this.tabBar});
 
   final String title;
+  final TabBar? tabBar;
 
   @override
   State<EcoQuizzAppBar> createState() => _EcoQuizzAppBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize {
+    // Si un tabBar est fourni, on ajoute sa hauteur à celle de la barre d'outils
+    if (tabBar != null) {
+      return Size.fromHeight(kToolbarHeight + tabBar!.preferredSize.height);
+    }
+    return const Size.fromHeight(kToolbarHeight);
+  }
 }
 
 class _EcoQuizzAppBarState extends State<EcoQuizzAppBar> {
@@ -42,7 +49,22 @@ class _EcoQuizzAppBarState extends State<EcoQuizzAppBar> {
       iconTheme: IconThemeData(
         color: Theme.of(context).colorScheme.onPrimary,
       ),
+      bottom: widget.tabBar,
       actions: [
+        _isLoading
+            ? CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.onPrimary,
+              )
+            : _isLogged
+                ? IconButton(
+                    icon: const Icon(Icons.person),
+                    onPressed: () async {
+                      if (context.mounted) {
+                        Navigator.pushNamed(context, '/user-page');
+                      }
+                    },
+                  )
+                : const SizedBox(),
         _isLoading
             ? CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.onPrimary,

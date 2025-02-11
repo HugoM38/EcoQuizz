@@ -1,11 +1,11 @@
 import 'package:ecoquizz/ui/defi/defi_home.dart';
 import 'package:ecoquizz/ui/auth/signup_page.dart';
 import 'package:ecoquizz/ui/auth/signup_viewmodel.dart';
+import 'package:ecoquizz/ui/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ecoquizz/models/auth_model.dart';
 import 'package:ecoquizz/ui/auth/login_page.dart';
 import 'package:ecoquizz/ui/auth/login_viewmodel.dart';
-import 'package:ecoquizz/ui/home/home_page.dart';
 import 'package:ecoquizz/utils/auth_observer.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +30,8 @@ class EcoQuizz extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
-        '/home': (context) => const DefiPage()
+        '/home': (context) => const DefiPage(),
+        '/user-page': (context) => const UserPage(),
       },
       navigatorObservers: [AuthObserver()],
       theme: ThemeData(

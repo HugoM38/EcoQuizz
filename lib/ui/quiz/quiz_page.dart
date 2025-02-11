@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:ecoquizz/models/question.dart';
-import 'package:ecoquizz/ui/home/result_page.dart';
+import 'package:ecoquizz/ui/quiz/result_page.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_appbar.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_button.dart';
 import 'package:flutter/material.dart';

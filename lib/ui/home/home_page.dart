@@ -3,6 +3,7 @@ import 'package:ecoquizz/models/question.dart';
 import 'package:ecoquizz/services/quiz_service.dart';
 import 'package:ecoquizz/ui/quiz/quiz_page.dart';
 import 'package:ecoquizz/ui/widgets/EcoQuizz_appbar.dart';
+import 'package:ecoquizz/ui/user/user_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -38,6 +40,20 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const UserPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                child: const Text("Voir mon profil"),
               ),
             ],
           ),
@@ -61,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   _isQuizLaunching = false;
                 });
               },
-        child: Text("Lancer le quizz"),
+        child: const Text("Lancer le quizz"),
       ),
     );
   }

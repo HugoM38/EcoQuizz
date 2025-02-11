@@ -1,13 +1,11 @@
 import 'package:ecoquizz/models/answer.dart';
 
 class Question {
-  final int id;
   final int ordre;
   final String question;
   final List<Answer> answers;
 
   Question({
-    required this.id,
     required this.ordre,
     required this.question,
     required this.answers,
@@ -19,7 +17,6 @@ class Question {
         list.map((reponseJson) => Answer.fromJson(reponseJson)).toList();
 
     return Question(
-      id: json['id'],
       ordre: json['ordre'],
       question: json['question'],
       answers: answerList,

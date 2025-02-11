@@ -4,66 +4,73 @@ import 'package:ecoquizz/utils/shared_prefs_manager.dart';
 import 'package:http/http.dart' as http;
 
 class QuizService {
-  Future<List<Question>> fetchQuestions() async {
-    await Future.delayed(Duration(seconds: 1));
-    List<Map<String, dynamic>> data = [
-      {
-        "id": 1,
-        "ordre": 1,
-        "question": "Quel mode de transport utilises-tu le plus souvent ?",
-        "answers": [
-          {"answer": "Voiture", "impact": "0"},
-          {"answer": "Vélo", "impact": "1"},
-          {"answer": "Transports en commun", "impact": "2"}
-        ]
-      },
-      {
-        "id": 2,
-        "ordre": 2,
-        "question": "Combien de kilomètres parcourez-vous par semaine ?",
-        "answers": [
-          {"answer": "Moins de 10 km", "impact": "0"},
-          {"answer": "Entre 10 et 50 km", "impact": "1"},
-          {"answer": "Plus de 50 km", "impact": "2"}
-        ]
-      },
-    ];
+  final String baseUrl = "http://localhost:5001/api/quiz";
 
-    List<Question> questions =
-        data.map((json) => Question.fromJson(json)).toList();
-    questions.sort((a, b) => a.ordre.compareTo(b.ordre));
-    return questions;
+  Future<List<Question>> fetchQuestions() async {
+    final String? token = await SharedPreferencesManager.getSessionToken();
+    if (token == null) {
+      throw Exception("Token manquant pour l'authentification");
+    }
+    
+    final Uri url = Uri.parse("$baseUrl/questions");
+    final http.Response response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> questionsJson = data["questions"];
+      List<Question> questions = questionsJson
+          .map((json) => Question.fromJson(json))
+          .toList();
+      questions.sort((a, b) => a.ordre.compareTo(b.ordre));
+      return questions;
+    } else {
+      throw Exception("Erreur lors de la récupération des questions");
+    }
   }
 
   Future<String> saveQuizResult(int impact) async {
     final String? userId = await SharedPreferencesManager.getUser();
     if (userId == null) {
-      throw "Erreur lors de la sauvegarde du résultat du quiz";
+      throw Exception("Erreur lors de la sauvegarde du résultat du quiz : userId manquant");
+    }
+
+    final String? token = await SharedPreferencesManager.getSessionToken();
+    if (token == null) {
+      throw Exception("Token manquant pour l'authentification");
     }
 
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
     final Map<String, dynamic> result = {
-      "user_id": userId,
       "impact": impact,
       "date": timestamp,
     };
 
-    final Uri url = Uri.parse("https://example.com/api/quiz_result");
+    final Uri url = Uri.parse("$baseUrl/result");
 
     try {
       final http.Response response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        },
         body: jsonEncode(result),
       );
 
       if (response.statusCode == 200) {
         return "Résultat du quiz sauvegardé avec succès";
       } else {
-        throw "Erreur lors de la sauvegarde du résultat du quiz";
+        print(response.body);
+        throw Exception("Erreur lors de la sauvegarde du résultat du quiz");
       }
     } catch (e) {
-      throw "Erreur lors de la sauvegarde du résultat du quiz";
+      throw Exception("Erreur lors de la sauvegarde du résultat du quiz: $e");
     }
   }
 }

@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:ecoquizz/models/question.dart';
 import 'package:ecoquizz/ui/home/result_page.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_appbar.dart';
 import 'package:ecoquizz/ui/widgets/ecoquizz_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class QuizPage extends StatefulWidget {
   final List<Question> questions;
@@ -18,6 +20,38 @@ class _QuizPageState extends State<QuizPage> {
   int? selectedAnswerIndex;
   bool isValidated = false;
   int totalImpact = 0;
+
+  String? _equivalentsData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEquivalentsJson();
+  }
+
+  Future<void> _loadEquivalentsJson() async {
+    String jsonString =
+        await rootBundle.loadString('assets/data/co2_equivalents.json');
+    setState(() {
+      _equivalentsData = jsonString;
+    });
+  }
+
+  String getEquivalentMessage() {
+    if (_equivalentsData == null) {
+      return "Chargement des équivalences…";
+    }
+    final Map<String, dynamic> data = json.decode(_equivalentsData!);
+    final List<dynamic> equivalents = data["co2_equivalents"];
+    for (var item in equivalents) {
+      int min = item['min'];
+      int max = item['max'];
+      if (totalImpact >= min && totalImpact <= max) {
+        return item['message'];
+      }
+    }
+    return "aucun équivalent trouvé !";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +79,8 @@ class _QuizPageState extends State<QuizPage> {
                   int index = entry.key;
                   var answer = entry.value;
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                       color: selectedAnswerIndex == index
                           ? Colors.green.shade100
@@ -90,6 +125,12 @@ class _QuizPageState extends State<QuizPage> {
                 },
               ),
               SizedBox(height: 20),
+              if (isValidated)
+                Text(
+                  "Tu génères $totalImpact kg de CO₂ par mois, ${getEquivalentMessage()}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
             ],
           ),
         ),

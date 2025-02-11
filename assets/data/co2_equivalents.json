@@ -1,0 +1,54 @@
+{
+  "co2_equivalents": [
+    {
+      "min": 1,
+      "max": 10,
+      "message": "soit l’équivalent de la consommation électrique d’une ampoule LED pendant 24 heures."
+    },
+    {
+      "min": 11,
+      "max": 20,
+      "message": "soit l’équivalent d’un trajet en voiture d’environ 50 km (en supposant 0,2 kg CO₂/km)."
+    },
+    {
+      "min": 21,
+      "max": 30,
+      "message": "soit l’équivalent de l’émission de CO₂ d’un repas non végétarien pour une personne."
+    },
+    {
+      "min": 31,
+      "max": 40,
+      "message": "soit l’équivalent d’un aller-retour en train sur environ 200 km."
+    },
+    {
+      "min": 41,
+      "max": 50,
+      "message": "soit l’équivalent de l’utilisation d’un ordinateur portable pendant une semaine."
+    },
+    {
+      "min": 51,
+      "max": 100,
+      "message": "soit l’équivalent d’un trajet en voiture d’environ 250 km (en supposant 0,2 kg CO₂/km)."
+    },
+    {
+      "min": 101,
+      "max": 200,
+      "message": "soit l’équivalent d’un vol court-courrier aller-retour pour une personne."
+    },
+    {
+      "min": 201,
+      "max": 500,
+      "message": "soit l’équivalent de la consommation électrique moyenne d’un foyer pendant un mois."
+    },
+    {
+      "min": 501,
+      "max": 750,
+      "message": "soit l’équivalent d’un trajet en voiture d’environ 375 km (en supposant 0,2 kg CO₂/km)."
+    },
+    {
+      "min": 751,
+      "max": 1000,
+      "message": "soit l’équivalent de la consommation électrique annuelle d’un petit appartement."
+    }
+  ]
+}

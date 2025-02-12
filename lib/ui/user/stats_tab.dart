@@ -18,6 +18,7 @@ class StatsTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Card(
+            color: Colors.white,
             elevation: 4,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: Padding(
@@ -35,6 +36,7 @@ class StatsTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Card(
+            color: Colors.white,
             elevation: 4,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: Padding(
